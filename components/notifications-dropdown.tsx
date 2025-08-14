@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { Bell, Wifi, CreditCard, Settings, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 
-const notifications = [
+const initialNotifications = [
   {
     id: 1,
     title: "Пополнение баланса",
@@ -38,7 +41,12 @@ const notifications = [
 ]
 
 export function NotificationsDropdown() {
+  const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => n.unread).length
+
+  const markAllAsRead = () => {
+    setNotifications((prev) => prev.map((notification) => ({ ...notification, unread: false })))
+  }
 
   return (
     <DropdownMenu>
@@ -95,11 +103,15 @@ export function NotificationsDropdown() {
           })
         )}
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="justify-center text-primary">
-          <CheckCircle className="mr-2 h-4 w-4" />
-          Отметить все как прочитанные
-        </DropdownMenuItem>
+        {unreadCount > 0 && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="justify-center text-primary" onClick={markAllAsRead}>
+              <CheckCircle className="mr-2 h-4 w-4" />
+              Отметить все как прочитанные
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
